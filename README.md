@@ -65,3 +65,7 @@ El archivo `.github/workflows/devops-automation.yml` revisa en GitHub Actions qu
 
 ## Evidencias
 Las evidencias (capturas, comandos y resultados) están integradas en el informe del proyecto.
+## Registro de pruebas
+- Servicio levantado con docker compose up -d --build
+- Servicio verificado en http://localhost:8080
+
