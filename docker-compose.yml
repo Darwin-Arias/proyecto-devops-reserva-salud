@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    image: reservas-salud:1.0
+    container_name: reservas-salud-web
+    ports:
+      # Puerto del equipo : puerto del contenedor (por defecto 8080:80)
+      - "${HOST_PORT:-8080}:80"
+    restart: unless-stopped
