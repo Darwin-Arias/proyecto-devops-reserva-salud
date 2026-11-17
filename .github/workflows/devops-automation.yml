@@ -1,0 +1,37 @@
+name: Validación DevOps
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Verificar archivos obligatorios
+        run: |
+          for f in src/index.html src/styles.css Dockerfile docker-compose.yml .gitignore .env.example README.md; do
+            if [ -f "$f" ]; then echo "OK: $f"; else echo "FALTA: $f"; exit 1; fi
+          done
+
+      - name: Verificar que no existe un archivo .env real
+        run: |
+          if [ -f .env ]; then echo "Hay un .env en el repositorio"; exit 1; else echo "OK: sin .env"; fi
+
+      - name: Validar docker-compose.yml
+        run: docker compose config --quiet
+
+      - name: Construir la imagen Docker
+        run: docker build -t reservas-salud:ci .
+
+      - name: Probar que el servicio responde
+        run: |
+          docker run -d --name prueba -p 8080:80 reservas-salud:ci
+          sleep 5
+          curl -fsS http://localhost:8080 | grep -q "Reserva"
+          docker logs prueba
+          docker rm -f prueba
