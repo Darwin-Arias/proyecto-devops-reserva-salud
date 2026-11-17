@@ -56,10 +56,15 @@ docker run -d --name reservas-salud-web -p 8080:80 reservas-salud:1.0
 ```
 
 ## Seguridad
-- El repositorio no contiene credenciales, claves ni datos personales.
-- `.env` está en `.gitignore`; solo se publica `.env.example` con valores de ejemplo.
+- El repositorio no contiene credenciales, claves, tokens ni datos personales.
 - Los datos de la clínica (dirección, teléfono, correo) son ficticios.
-
+- El formulario es una simulación: no guarda ni envía información.
+- Las variables de configuración se separan del código: solo se publica `.env.example`, con valores de ejemplo. El archivo `.env` real se crea en cada computador y nunca se sube.
+- `.gitignore` bloquea `.env`, claves (`*.pem`, `*.key`), carpetas `secrets/` y logs.
+- Antes de cada commit se revisa con `git status` que no se suban archivos sensibles.
+- En cada pull request se revisa la pestaña "Files changed" para confirmar que no hay información sensible.
+- GitHub Actions verifica que no exista un archivo `.env` dentro del repositorio.
+- Si se publica algo sensible por error: se revoca esa credencial de inmediato y luego se corrige el repositorio.
 ## Automatización (opcional)
 El archivo `.github/workflows/devops-automation.yml` revisa en GitHub Actions que existan los archivos obligatorios, valida el Compose, construye la imagen y comprueba que la página responde. No publica nada en servidores externos.
 
